@@ -9,7 +9,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/snappy)
     find_package(Git QUIET REQUIRED)
     execute_process(
         COMMAND ${GIT_EXECUTABLE}
-            clone --depth 1 --branch 1.1.3 https://github.com/google/snappy ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+            clone --depth 1 https://github.com/google/snappy ${CMAKE_CURRENT_SOURCE_DIR}/snappy
         RESULT_VARIABLE r)
     if(r)
         message(FATAL_ERROR "git-cloning snappy failed.")
