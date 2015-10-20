@@ -1,2 +1,2 @@
 # snappy-cmake
-building google/snappy with CMake
+building [google/snappy](https://github.com/google/snappy) with CMake
