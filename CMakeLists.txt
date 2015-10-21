@@ -90,10 +90,11 @@ set(HAVE_LIBLZF 0)
 set(HAVE_LIBLZO2 0)
 set(HAVE_LIBQUICKLZ 0)
 
-find_package(ZLIB QUIET)
-if(ZLIB_FOUND)
-    set(HAVE_LIBZ 1)
-endif()
+# don't try to use ZLIB (should work, though)
+#find_package(ZLIB QUIET)
+#if(ZLIB_FOUND)
+#    set(HAVE_LIBZ 1)
+#endif()
 
 set(AC_APPLE_UNIVERSAL_BUILD 0)
 
@@ -167,9 +168,6 @@ target_include_directories(snappy
 if(NOT UNIX AND NOT BUILD_SHARED_LIBS)
     set_target_properties(snappy PROPERTIES OUTPUT_NAME libsnappy)
 endif()
-set_target_properties(snappy PROPERTIES
-    VERSION 11.12.13
-    SOVERSION 21.22.23)
 
 install(FILES ${include_HEADERS} DESTINATION include)
 install(TARGETS snappy EXPORT snappy-targets
@@ -190,12 +188,15 @@ add_executable(snappy_unittest
     ${repo}/snappy-test.cc
     ${repo}/snappy-test.h
 )
-foreach(t gtest gflags ZLIB::ZLIB)
+foreach(t gtest gflags)
     if(TARGET ${t})
         target_link_libraries(snappy_unittest ${t})
     endif()
 endforeach()
-target_link_libraries(snappy_unittest snappy)
+target_include_directories(snappy_unittest PRIVATE ${ZLIB_INCLUDE_DIRS})
+target_compile_definitions(snappy_unittest PRIVATE ${ZLIB_DEFINITIONS})
+target_link_libraries(snappy_unittest snappy ${ZLIB_LIBRARIES})
+
 enable_testing()
 add_test(NAME snappy_unittest
     COMMAND snappy_unittest
