@@ -9,10 +9,19 @@ if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/snappy)
     find_package(Git QUIET REQUIRED)
     execute_process(
         COMMAND ${GIT_EXECUTABLE}
-            clone --depth 1 https://github.com/google/snappy ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+            clone
+                https://github.com/google/snappy ${CMAKE_CURRENT_SOURCE_DIR}/snappy
         RESULT_VARIABLE r)
     if(r)
         message(FATAL_ERROR "git-cloning snappy failed.")
+    endif()
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE}
+            checkout 96a2e340f381ac4dae270f0fe0a8d79fad748c4d # Aug 26, 2015
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+        RESULT_VARIABLE r)
+    if(r)
+        message(FATAL_ERROR "git-checkout snappy commit failed.")
     endif()
 endif()
 
